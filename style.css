@@ -371,8 +371,8 @@ input, select, textarea { font-family: var(--font-t); }
 .stat:last-child { border-bottom: none; }
 .stat-number { font-family: var(--font-d); font-size: 44px; font-weight: 600; letter-spacing: -0.28px; line-height: 1.07; color: var(--ink); }
 .stat-label { font-size: 17px; color: var(--ink-48); }
-.about-photo { border-radius: var(--r-lg); overflow: hidden; position: sticky; top: 80px; }
-.about-photo img { width: 100%; height: auto; display: block; }
+.about-photos { display: flex; flex-direction: column; gap: 12px; position: sticky; top: 80px; }
+.about-photos img { width: 100%; height: auto; display: block; border-radius: var(--r-lg); }
 
 /* ===== Concerts — horizontal list ===== */
 .concert-list { display: flex; flex-direction: column; gap: 0; }
@@ -676,8 +676,7 @@ input, select, textarea { font-family: var(--font-t); }
   .news-grid { grid-template-columns: 1fr; }
 
   .about-grid { grid-template-columns: 1fr; gap: 40px; }
-  .about-photo { position: static; }
-  .about-photo img { height: 320px; }
+  .about-photos { position: static; }
 
   .concert-row { grid-template-columns: 140px 1fr; gap: 20px; padding: 28px 0; }
   .concert-row--dark { margin: 0 -16px; padding: 28px 16px; }
