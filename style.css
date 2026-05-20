@@ -473,8 +473,8 @@ input, select, textarea { font-family: var(--font-t); }
 
 .video-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
 }
 .video-grid--hidden { display: none; }
 
@@ -486,6 +486,25 @@ input, select, textarea { font-family: var(--font-t); }
   transition: transform var(--trans);
 }
 .video-card:hover { transform: translateY(-3px); }
+.video-card--coming-soon { border: 1.5px dashed rgba(255,255,255,0.2); }
+.video-coming-soon {
+  aspect-ratio: 16/9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.04);
+}
+.video-coming-soon-label {
+  font-family: var(--font-d);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: rgba(255,255,255,0.5);
+}
+.video-coming-soon p { font-size: 14px; color: rgba(255,255,255,0.35); margin: 0; }
+.video-coming-soon-sub { font-size: 12px !important; color: rgba(255,255,255,0.2) !important; }
 .video-embed { aspect-ratio: 16/9; width: 100%; }
 .video-embed iframe { width: 100%; height: 100%; border: none; display: block; }
 .video-info { padding: 14px 16px; }
@@ -664,7 +683,7 @@ input, select, textarea { font-family: var(--font-t); }
   .concert-row--dark { margin: 0 -16px; padding: 28px 16px; }
   .concert-name { font-size: 22px; }
 
-  .video-grid { grid-template-columns: 1fr 1fr; }
+  .video-grid { grid-template-columns: 1fr; }
 
   .instagram-block { grid-template-columns: 1fr; gap: 32px; }
 
