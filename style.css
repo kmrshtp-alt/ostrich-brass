@@ -246,14 +246,14 @@ input, select, textarea { font-family: var(--font-t); }
   position: relative;
   min-height: 88vh;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   text-align: center;
   overflow: hidden;
   padding: 0 var(--space-lg);
   background-image: url('images/IMG_6900.JPG');
   background-size: cover;
-  background-position: center 30%;
+  background-position: center 65%;
 }
 .hero::after {
   content: '';
@@ -268,7 +268,7 @@ input, select, textarea { font-family: var(--font-t); }
   position: relative;
   z-index: 2;
   max-width: 680px;
-  padding: 120px 0 100px;
+  padding: 100px 0 60px;
 }
 .hero-eyebrow {
   font-size: 14px; font-weight: 400; letter-spacing: 0.15em;
@@ -276,7 +276,7 @@ input, select, textarea { font-family: var(--font-t); }
 }
 .hero-title {
   font-family: var(--font-d);
-  font-size: clamp(40px, 8vw, 72px);
+  font-size: clamp(52px, 9vw, 88px);
   font-weight: 600; line-height: 1.07; letter-spacing: -0.28px;
   color: #fff; margin-bottom: 10px;
 }
