@@ -684,14 +684,16 @@ input, select, textarea { font-family: var(--font-t); }
   }
   .hero-image {
     display: block !important;
-    width: 100%;
+    width: 100vw;
+    margin-left: calc(-1 * var(--space-lg));
   }
   .hero-photo {
     display: block !important;
     width: 100%;
-    height: auto;
+    height: 56vw;
+    object-fit: cover;
+    object-position: center 38%;
     border-radius: 0;
-    object-fit: unset;
   }
   .hero-title { font-size: 38px; }
 
