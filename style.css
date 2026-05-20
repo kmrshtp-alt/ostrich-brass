@@ -370,6 +370,8 @@ input, select, textarea { font-family: var(--font-t); }
 .stat:last-child { border-bottom: none; }
 .stat-number { font-family: var(--font-d); font-size: 44px; font-weight: 600; letter-spacing: -0.28px; line-height: 1.07; color: var(--ink); }
 .stat-label { font-size: 17px; color: var(--ink-48); }
+.about-photo { margin-top: 56px; border-radius: var(--r-lg); overflow: hidden; }
+.about-photo img { width: 100%; height: 480px; object-fit: cover; object-position: center 30%; display: block; }
 
 /* ===== Concerts — horizontal list ===== */
 .concert-list { display: flex; flex-direction: column; gap: 0; }
