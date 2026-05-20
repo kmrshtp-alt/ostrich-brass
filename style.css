@@ -671,12 +671,29 @@ input, select, textarea { font-family: var(--font-t); }
 
   .hero {
     min-height: 0;
-    height: 85svh;
-    background-position: center 15%;
-    align-items: flex-start;
+    height: auto;
+    background-image: none !important;
+    background-color: #111;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .hero::after { display: none; }
+  .hero-content {
+    padding: 80px var(--space-lg) 44px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+  }
+  .hero-image {
+    display: block !important;
+    width: 100%;
+  }
+  .hero-photo {
+    display: block !important;
+    width: 100%;
+    height: auto;
+    border-radius: 0;
+    object-fit: unset;
   }
   .hero-title { font-size: 38px; }
-  .hero-content { padding: 72px var(--space-lg) 40px; }
 
   .news-grid { grid-template-columns: 1fr; }
 
