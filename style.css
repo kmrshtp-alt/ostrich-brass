@@ -216,9 +216,28 @@ input, select, textarea { font-family: var(--font-t); }
 .btn-large { padding: 14px 28px; font-size: 18px; font-weight: 300; }
 
 /* ===== Section Base ===== */
-.section      { padding: var(--space-sec) 0; background: var(--canvas); }
-.section-alt  { padding: var(--space-sec) 0; background: var(--parchment); }
-.section-dark { padding: var(--space-sec) 0; background: var(--tile-dark); color: #fff; }
+.section      { position: relative; padding: var(--space-sec) 0; background: var(--canvas); overflow: hidden; }
+.section-alt  { position: relative; padding: var(--space-sec) 0; background: var(--parchment); overflow: hidden; }
+.section-dark { position: relative; padding: var(--space-sec) 0; background: var(--tile-dark); color: #fff; overflow: hidden; }
+
+/* Watermark logo in light sections */
+.section::before,
+.section-alt::before {
+  content: '';
+  position: absolute;
+  right: -80px;
+  bottom: -80px;
+  width: 520px;
+  height: 520px;
+  background-image: url('images/flyers/logo.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  opacity: 0.045;
+  pointer-events: none;
+  z-index: 0;
+}
+.section > *, .section-alt > * { position: relative; z-index: 1; }
 
 .section-label {
   font-size: 12px; font-weight: 400; letter-spacing: 0.15em;
