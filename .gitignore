@@ -10,3 +10,15 @@
 
 # npm
 node_modules/
+
+# Original images (WebP versions are served instead)
+# Keep only kbef2026.jpg as it is used as <img src> fallback
+images/**/*.jpg
+images/**/*.JPG
+images/**/*.jpeg
+images/**/*.JPEG
+images/**/*.png
+images/**/*.PNG
+images/**/*.heic
+images/**/*.HEIC
+!images/flyers/kbef2026.jpg
