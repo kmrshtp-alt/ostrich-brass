@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Local Netlify folder
+.netlify
+
+# Local env vars (secret tokens - do not commit)
+.env
+
+# npm
+node_modules/
