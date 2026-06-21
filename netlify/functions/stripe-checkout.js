@@ -1,5 +1,7 @@
 const Stripe = require('stripe');
 
+const TICKET_LIMIT = 80; // 前売り券の総販売上限
+
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
@@ -24,6 +26,44 @@ exports.handler = async (event) => {
   const quantity = parseInt(adult_count);
 
   try {
+    // 販売済み枚数を集計（支払い完了済みのセッションのみ）
+    let soldCount = 0;
+    let hasMore = true;
+    let startingAfter = undefined;
+
+    while (hasMore) {
+      const sessions = await stripe.checkout.sessions.list({
+        limit: 100,
+        payment_status: 'paid',
+        ...(startingAfter ? { starting_after: startingAfter } : {}),
+      });
+
+      for (const s of sessions.data) {
+        soldCount += parseInt(s.metadata?.adult_count || 0);
+      }
+
+      hasMore = sessions.has_more;
+      if (hasMore) {
+        startingAfter = sessions.data[sessions.data.length - 1].id;
+      }
+    }
+
+    const remaining = TICKET_LIMIT - soldCount;
+
+    if (remaining <= 0) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: '前売り券は完売しました。当日券（2,000円）を会場受付にてお求めください。' }),
+      };
+    }
+
+    if (quantity > remaining) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: `残り${remaining}枚です。枚数を変更してください。` }),
+      };
+    }
+
     const session = await stripe.checkout.sessions.create({
       line_items: [
         {
@@ -39,7 +79,7 @@ exports.handler = async (event) => {
         },
       ],
       mode: 'payment',
-      customer_email: undefined, // Stripeの画面でメールを入力してもらう
+      customer_email: undefined,
       metadata: {
         last_name: last_name || '',
         first_name: first_name || '',
@@ -59,7 +99,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url: session.url }),
+      body: JSON.stringify({ url: session.url, remaining: remaining - quantity }),
     };
   } catch (err) {
     return {

@@ -1057,6 +1057,7 @@
       if (!last_name_kana || !first_name_kana) { alert('フリガナを入力してください。'); return; }
       if (!phone) { alert('電話番号を入力してください。'); return; }
       if (adult_count < 1) { alert('大人の枚数を1枚以上入力してください。'); return; }
+      if (adult_count > 80) { alert('1回のご購入は80枚までです。'); return; }
 
       submitBtn.disabled = true;
       submitBtn.textContent = '処理中...';
