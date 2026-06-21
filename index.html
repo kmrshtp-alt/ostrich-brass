@@ -89,15 +89,202 @@
   </script>
 
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* ===== 長崎公演スポットライト ===== */
+    .np-spotlight {
+      background: #05080f;
+      border-top: 3px solid #c9a84c;
+      padding: 72px 0;
+    }
+    .np-spotlight-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      gap: 72px;
+      cursor: pointer;
+    }
+    .np-spotlight-inner:hover .np-spotlight-cta {
+      background: #0071e3;
+    }
+    .np-spotlight-inner:hover .np-spotlight-flyer img {
+      transform: scale(1.02);
+    }
+
+    /* 左：テキスト */
+    .np-spotlight-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .np-spotlight-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .np-spotlight-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #c9a84c;
+    }
+    .np-spotlight-badge {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: #fff;
+      background: #c9a84c;
+      padding: 3px 10px;
+      border-radius: 3px;
+    }
+    .np-spotlight-date {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: rgba(255,255,255,0.45);
+      margin: 0;
+    }
+    .np-spotlight-date span {
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.3);
+    }
+    .np-spotlight-title {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(36px, 4.5vw, 62px);
+      font-weight: 400;
+      font-style: italic;
+      color: #fff;
+      line-height: 1.1;
+      margin: 0;
+      letter-spacing: -0.01em;
+    }
+    .np-spotlight-title em {
+      font-style: italic;
+      color: #c9a84c;
+    }
+    .np-spotlight-info {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 20px 0;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .np-spotlight-info-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.6;
+    }
+    .np-spotlight-info-icon {
+      font-size: 15px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .np-map-link {
+      display: inline-block;
+      margin-left: 8px;
+      color: rgba(255,255,255,0.4);
+      font-size: 11px;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 3px;
+      padding: 1px 6px;
+      text-decoration: none;
+      vertical-align: middle;
+      transition: all 0.15s;
+    }
+    .np-map-link:hover { color: #fff; border-color: rgba(255,255,255,0.5); }
+    .np-spotlight-cta {
+      display: inline-flex;
+      align-items: center;
+      background: #0066cc;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 14px 28px;
+      border-radius: 100px;
+      width: fit-content;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    /* 右：フライヤー */
+    .np-spotlight-flyer {
+      flex: 0 0 380px;
+    }
+    .np-spotlight-flyer img {
+      width: 100%;
+      display: block;
+      border-radius: 4px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,168,76,0.2);
+      transition: transform 0.3s ease;
+    }
+
+    @media (max-width: 768px) {
+      .np-spotlight { padding: 48px 0; }
+      .np-spotlight-inner { flex-direction: column-reverse; gap: 32px; padding: 0 24px; }
+      .np-spotlight-flyer { flex: none; width: 200px; align-self: center; }
+      .np-spotlight-title { font-size: clamp(32px, 8vw, 48px); }
+    }
+    @keyframes dot-blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+    .nav-cta-nagasaki {
+      background: transparent !important;
+      color: #fff !important;
+      border: 1.5px solid rgba(255,255,255,0.5) !important;
+      font-size: 13px !important;
+      font-weight: 500 !important;
+      padding: 5px 14px 5px 10px !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 7px !important;
+    }
+    .nav-cta-mobile.nav-cta-nagasaki { display: none !important; }
+    .nav-cta-nagasaki::before {
+      content: '';
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #4fc3f7;
+      flex-shrink: 0;
+      animation: dot-blink 1.4s ease-in-out infinite;
+    }
+    .nav-cta-nagasaki:hover {
+      background: rgba(255,255,255,0.08) !important;
+      border-color: #fff !important;
+    }
+    /* NEWバッジ */
+    .news-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      padding: 3px 9px;
+      border-radius: 4px;
+      vertical-align: middle;
+    }
+    .news-tag--new {
+      background: #e03131;
+      color: #fff;
+    }
+  </style>
 </head>
 <body>
 
   <!-- ===== Announcement Bar ===== -->
   <div class="announcement" id="announcement">
     <div class="announcement-inner">
-      <span class="announcement-badge">NEW</span>
-      <p>第5回定期演奏会（2026.2.8）にたくさんのご来場ありがとうございました！
-        <a href="https://www.youtube.com/watch?v=h3NLvP3GOLg" target="_blank" rel="noopener">過去公演の録画はYouTubeで公開中 →</a>
+      <span class="announcement-badge">長崎公演</span>
+      <p>🎺 9月20日（日）長崎県美術館ホール｜前売り1,500円
+        <a href="nagasaki2026.html">チケット取り置きはこちら →</a>
       </p>
       <button class="announcement-close" id="announcement-close" aria-label="閉じる">✕</button>
     </div>
@@ -117,8 +304,10 @@
         <li><a href="#videos">演奏動画</a></li>
         <li><a href="members.html">メンバー</a></li>
         <li><a href="history.html">History</a></li>
+        <li><a href="nagasaki2026.html" class="nav-cta nav-cta-nagasaki">長崎公演</a></li>
         <li><a href="#request" class="nav-cta">演奏依頼</a></li>
       </ul>
+      <a href="nagasaki2026.html" class="nav-cta nav-cta-nagasaki nav-cta-mobile">長崎公演</a>
       <a href="#request" class="nav-cta nav-cta-mobile">演奏依頼</a>
       <button class="nav-hamburger" id="hamburger" aria-label="メニュー">
         <span></span><span></span><span></span>
@@ -163,12 +352,67 @@
     </div>
   </section>
 
+  <!-- ===== 長崎公演スポットライト ===== -->
+  <section class="np-spotlight" id="nagasaki-upcoming">
+    <div class="np-spotlight-inner" role="link" tabindex="0" onclick="location.href='nagasaki2026.html'" onkeydown="if(event.key==='Enter')location.href='nagasaki2026.html'">
+
+      <!-- 左：情報 -->
+      <div class="np-spotlight-body">
+        <div class="np-spotlight-eyebrow">
+          <span class="np-spotlight-label">Upcoming Concert</span>
+          <span class="np-spotlight-badge">前売り受付中</span>
+        </div>
+        <p class="np-spotlight-date">2026 <span>SEP</span> 20 <span>SUN</span></p>
+        <h2 class="np-spotlight-title">Concert in<br><em>Nagasaki</em></h2>
+        <div class="np-spotlight-info">
+          <div class="np-spotlight-info-row">
+            <span class="np-spotlight-info-icon">🕒</span>
+            <span>15:00開演（14:30開場）</span>
+          </div>
+          <div class="np-spotlight-info-row">
+            <span class="np-spotlight-info-icon">📍</span>
+            <span>長崎県美術館ホール
+              <a href="https://maps.google.com/?q=長崎県美術館+長崎市出島町2-1" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="np-map-link">地図</a>
+            </span>
+          </div>
+          <div class="np-spotlight-info-row">
+            <span class="np-spotlight-info-icon">🎟️</span>
+            <span>前売り 1,500円　／　当日 2,000円　／　小学生以下無料</span>
+          </div>
+        </div>
+        <a href="nagasaki2026.html" class="np-spotlight-cta" onclick="event.stopPropagation()">チケットを取り置きする →</a>
+      </div>
+
+      <!-- 右：フライヤー -->
+      <div class="np-spotlight-flyer">
+        <img src="images/news/nagasaki2026-flyer.webp" alt="Concert in Nagasaki 2026 フライヤー">
+      </div>
+
+    </div>
+  </section>
+
   <!-- ===== News ===== -->
   <section class="section section-alt" id="news">
     <div class="container">
       <div class="section-label">News</div>
       <h2 class="section-title">お知らせ</h2>
       <div class="news-grid">
+
+        <!-- 長崎公演 予約受付中カード -->
+        <article class="news-card news-card--featured">
+          <div class="news-card-img">
+            <img src="images/news/nagasaki2026-flyer.webp" alt="Ostrich Brass Concert in Nagasaki 2026">
+          </div>
+          <div class="news-card-body">
+            <div class="news-card-meta">
+              <span class="news-tag news-tag--new">NEW</span>
+              <span class="news-date">2026.09.20</span>
+            </div>
+            <h3 class="news-title">初の県外公演、長崎へ。前売りチケット受付中！</h3>
+            <p class="news-excerpt">2026年9月20日（日）長崎県美術館ホールにて開催。前売り1,500円・当日2,000円・小学生以下無料。枚数限定、お早めに！</p>
+            <a href="nagasaki2026.html" class="btn-primary" style="display:inline-block;margin-top:16px;">チケットを取り置きする →</a>
+          </div>
+        </article>
 
         <article class="news-card news-card--featured">
           <div class="news-card-img">
@@ -494,34 +738,6 @@
 
       <!-- 新しい順に -->
       <div class="video-grid">
-        <div class="video-card">
-          <div class="video-embed">
-            <iframe src="https://www.youtube.com/embed/LzKBADs14Zg" title="どうぶつコラール集/バードランド 第6回九州金管アンサンブルフェスティバル" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
-          </div>
-          <div class="video-info">
-            <span class="video-badge">KBEF 2026</span>
-            <h3>第6回九州金管アンサンブルフェスティバル</h3>
-            <p>2026年5月30日 クリエイト篠栗 大ホール</p>
-          </div>
-        </div>
-        <div class="video-card">
-          <div class="video-embed">
-            <iframe src="https://www.youtube.com/embed/Km8FYG5GzI4" title="どうぶつコラール集｜オーストリッチブラス" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
-          </div>
-          <div class="video-info">
-            <h3>どうぶつコラール集｜第6回KBEF</h3>
-            <p>2026年5月30日</p>
-          </div>
-        </div>
-        <div class="video-card">
-          <div class="video-embed">
-            <iframe src="https://www.youtube.com/embed/1v0U5GvrAgg" title="BIRDLAND｜オーストリッチブラス" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
-          </div>
-          <div class="video-info">
-            <h3>BIRDLAND｜第6回KBEF</h3>
-            <p>2026年5月30日</p>
-          </div>
-        </div>
         <div class="video-card video-card--coming-soon">
           <div class="video-coming-soon">
             <span class="video-coming-soon-label">Coming Soon</span>
@@ -950,6 +1166,7 @@
           <a href="#testimonials">来場者の声</a>
           <a href="#faq">FAQ</a>
           <a href="#request">演奏依頼</a>
+          <a href="tokushoho.html">特定商取引法に基づく表記</a>
         </div>
         <div class="footer-social">
           <a href="https://youtube.com/@ostrichbrass" target="_blank" rel="noopener" aria-label="YouTube" class="social-link">

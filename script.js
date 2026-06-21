@@ -16,8 +16,6 @@ window.addEventListener('load', () => {
         window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - navH, behavior: 'smooth' });
       }
     }, 100);
-  } else {
-    window.scrollTo(0, 0);
   }
 });
 

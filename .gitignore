@@ -22,3 +22,9 @@ images/**/*.PNG
 images/**/*.heic
 images/**/*.HEIC
 !images/flyers/kbef2026.jpg
+!images/logo-transparent.png
+!images/logo-stripe.png
+!images/payment/*.png
+!images/payment/*.gif
+!images/payment/*.jpg
+!images/payment/*.svg
