@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ostrich Brass</title>
+  <meta name="robots" content="noindex,nofollow">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif; background: #f5f5f5; color: #1a1a1a; }
+
+    .login-wrap {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh;
+    }
+    .login-box {
+      background: #fff; border-radius: 12px; padding: 40px;
+      width: 100%; max-width: 360px; box-shadow: 0 2px 16px rgba(0,0,0,0.1);
+    }
+    .login-title { font-size: 20px; font-weight: 700; margin-bottom: 24px; }
+    .login-box input {
+      width: 100%; padding: 12px 14px; border: 1px solid #ddd;
+      border-radius: 8px; font-size: 16px; margin-bottom: 12px;
+    }
+    .login-box button {
+      width: 100%; padding: 12px; background: #1a1a1a; color: #fff;
+      border: none; border-radius: 8px; font-size: 16px; font-weight: 600;
+      cursor: pointer;
+    }
+    .login-error { color: #c00; font-size: 14px; margin-top: 8px; }
+
+    .admin-wrap { display: none; padding: 32px 24px; max-width: 1100px; margin: 0 auto; }
+    .admin-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+    .admin-title { font-size: 22px; font-weight: 700; }
+
+    .summary-row { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+    .summary-card {
+      background: #fff; border-radius: 10px; padding: 16px 24px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.08); min-width: 140px;
+    }
+    .summary-label { font-size: 12px; color: #666; margin-bottom: 4px; }
+    .summary-value { font-size: 28px; font-weight: 700; }
+    .summary-value span { font-size: 14px; font-weight: 400; margin-left: 2px; }
+
+    .btn-csv {
+      padding: 10px 20px; background: #2d7a2d; color: #fff;
+      border: none; border-radius: 8px; font-size: 14px; font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-reload {
+      padding: 10px 20px; background: #fff; color: #1a1a1a;
+      border: 1px solid #ddd; border-radius: 8px; font-size: 14px;
+      cursor: pointer; margin-right: 8px;
+    }
+
+    .table-wrap { background: #fff; border-radius: 10px; overflow: auto; box-shadow: 0 1px 6px rgba(0,0,0,0.08); }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    thead th {
+      background: #1a1a1a; color: #fff; padding: 12px 14px;
+      text-align: left; white-space: nowrap; font-weight: 600;
+    }
+    tbody tr:nth-child(even) { background: #f9f9f9; }
+    tbody td { padding: 11px 14px; border-bottom: 1px solid #eee; white-space: nowrap; }
+    tbody tr:last-child td { border-bottom: none; }
+    .num { text-align: right; }
+
+    .loading { text-align: center; padding: 60px; color: #888; }
+  </style>
+</head>
+<body>
+
+<!-- ログイン画面 -->
+<div class="login-wrap" id="login-wrap">
+  <div class="login-box">
+    <div class="login-title">Ostrich Brass</div>
+    <input type="password" id="password-input" placeholder="パスワード" autocomplete="current-password">
+    <button onclick="login()">ログイン</button>
+    <div class="login-error" id="login-error"></div>
+  </div>
+</div>
+
+<!-- 管理画面 -->
+<div class="admin-wrap" id="admin-wrap">
+  <div class="admin-header">
+    <div class="admin-title">チケット購入一覧</div>
+    <div>
+      <button class="btn-reload" onclick="loadData()">↺ 更新</button>
+      <button class="btn-csv" onclick="downloadCSV()">CSV ダウンロード</button>
+    </div>
+  </div>
+
+  <div class="summary-row" id="summary-row">
+    <div class="summary-card">
+      <div class="summary-label">大人 合計</div>
+      <div class="summary-value" id="total-adults">—<span>名</span></div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">子ども 合計</div>
+      <div class="summary-value" id="total-children">—<span>名</span></div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">合計人数</div>
+      <div class="summary-value" id="total-all">—<span>名</span></div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">残席</div>
+      <div class="summary-value" id="total-remaining">—<span>席</span></div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">購入件数</div>
+      <div class="summary-value" id="total-orders">—<span>件</span></div>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <div class="loading" id="loading">読み込み中...</div>
+    <table id="tickets-table" style="display:none;">
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>購入日時</th>
+          <th>姓</th>
+          <th>名</th>
+          <th>セイ</th>
+          <th>メイ</th>
+          <th>電話番号</th>
+          <th>紹介メンバー</th>
+          <th class="num">大人</th>
+          <th class="num">子ども</th>
+          <th class="num">合計</th>
+        </tr>
+      </thead>
+      <tbody id="tickets-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  let currentData = null;
+  let savedPassword = '';
+
+  function login() {
+    const pw = document.getElementById('password-input').value;
+    savedPassword = pw;
+    loadData(pw);
+  }
+
+  document.getElementById('password-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') login();
+  });
+
+  async function loadData(pw) {
+    const password = pw || savedPassword;
+    try {
+      const res = await fetch('/.netlify/functions/get-tickets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+
+      if (res.status === 401) {
+        document.getElementById('login-error').textContent = 'パスワードが違います';
+        return;
+      }
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+
+      currentData = data;
+
+      // ログイン画面を隠して管理画面を表示
+      document.getElementById('login-wrap').style.display = 'none';
+      document.getElementById('admin-wrap').style.display = 'block';
+
+      renderData(data);
+    } catch (err) {
+      document.getElementById('login-error').textContent = 'エラー: ' + err.message;
+    }
+  }
+
+  function renderData(data) {
+    const { tickets, totalAdults, totalChildren } = data;
+    const totalAll = totalAdults + totalChildren;
+    const remaining = 80 - totalAll;
+
+    document.getElementById('total-adults').innerHTML = `${totalAdults}<span>名</span>`;
+    document.getElementById('total-children').innerHTML = `${totalChildren}<span>名</span>`;
+    document.getElementById('total-all').innerHTML = `${totalAll}<span>名</span>`;
+    document.getElementById('total-remaining').innerHTML = `${remaining}<span>席</span>`;
+    document.getElementById('total-orders').innerHTML = `${tickets.length}<span>件</span>`;
+
+    const tbody = document.getElementById('tickets-tbody');
+    tbody.innerHTML = '';
+
+    tickets.forEach((t, i) => {
+      const date = new Date(t.created * 1000).toLocaleString('ja-JP', {
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit'
+      });
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${tickets.length - i}</td>
+        <td>${date}</td>
+        <td>${t.last_name}</td>
+        <td>${t.first_name}</td>
+        <td>${t.last_name_kana}</td>
+        <td>${t.first_name_kana}</td>
+        <td>${t.phone}</td>
+        <td>${t.referrer || '—'}</td>
+        <td class="num">${t.adult_count}</td>
+        <td class="num">${t.child_count}</td>
+        <td class="num">${t.adult_count + t.child_count}</td>
+      `;
+      tbody.appendChild(row);
+    });
+
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('tickets-table').style.display = 'table';
+  }
+
+  function downloadCSV() {
+    if (!currentData) return;
+    const { tickets } = currentData;
+
+    const header = ['No.', '購入日時', '姓', '名', 'セイ', 'メイ', '電話番号', '紹介メンバー', '大人', '子ども', '合計'];
+    const rows = tickets.map((t, i) => {
+      const date = new Date(t.created * 1000).toLocaleString('ja-JP');
+      return [
+        tickets.length - i, date,
+        t.last_name, t.first_name, t.last_name_kana, t.first_name_kana,
+        t.phone, t.referrer || '',
+        t.adult_count, t.child_count, t.adult_count + t.child_count
+      ];
+    });
+
+    const csv = [header, ...rows].map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+    const bom = '﻿';
+    const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `ostrich-brass-tickets-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+</script>
+
+</body>
+</html>

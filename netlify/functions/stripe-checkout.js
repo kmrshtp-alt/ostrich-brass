@@ -34,12 +34,13 @@ exports.handler = async (event) => {
     while (hasMore) {
       const sessions = await stripe.checkout.sessions.list({
         limit: 100,
-        payment_status: 'paid',
         ...(startingAfter ? { starting_after: startingAfter } : {}),
       });
 
       for (const s of sessions.data) {
+        if (s.payment_status !== 'paid') continue;
         soldCount += parseInt(s.metadata?.adult_count || 0);
+        soldCount += parseInt(s.metadata?.child_count || 0);
       }
 
       hasMore = sessions.has_more;
@@ -90,6 +91,19 @@ exports.handler = async (event) => {
         referrer: referrer || '',
         adult_count: String(quantity),
         child_count: String(parseInt(child_count) || 0),
+      },
+      payment_intent_data: {
+        metadata: {
+          last_name: last_name || '',
+          first_name: first_name || '',
+          last_name_kana: last_name_kana || '',
+          first_name_kana: first_name_kana || '',
+          name,
+          phone: phone || '',
+          referrer: referrer || '',
+          adult_count: String(quantity),
+          child_count: String(parseInt(child_count) || 0),
+        },
       },
       success_url: 'https://ostrich-brass.netlify.app/nagasaki2026.html?success=true',
       cancel_url: 'https://ostrich-brass.netlify.app/nagasaki2026.html?canceled=true',
