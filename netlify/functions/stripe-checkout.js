@@ -65,20 +65,36 @@ exports.handler = async (event) => {
       };
     }
 
-    const session = await stripe.checkout.sessions.create({
-      line_items: [
-        {
-          price_data: {
-            currency: 'jpy',
-            product_data: {
-              name: 'Ostrich Brass Concert in Nagasaki 前売り券',
-              description: '2026年9月20日（日）長崎県美術館ホール',
-            },
-            unit_amount: 1500,
+    const childQuantity = parseInt(child_count) || 0;
+    const line_items = [
+      {
+        price_data: {
+          currency: 'jpy',
+          product_data: {
+            name: 'Ostrich Brass Concert in Nagasaki 前売り券（大人）',
+            description: '2026年9月20日（日）長崎県美術館ホール',
           },
-          quantity,
+          unit_amount: 1500,
         },
-      ],
+        quantity,
+      },
+    ];
+    if (childQuantity > 0) {
+      line_items.push({
+        price_data: {
+          currency: 'jpy',
+          product_data: {
+            name: 'Ostrich Brass Concert in Nagasaki 前売り券（小学生以下）',
+            description: '2026年9月20日（日）長崎県美術館ホール・無料',
+          },
+          unit_amount: 0,
+        },
+        quantity: childQuantity,
+      });
+    }
+
+    const session = await stripe.checkout.sessions.create({
+      line_items,
       mode: 'payment',
       customer_email: undefined,
       metadata: {
