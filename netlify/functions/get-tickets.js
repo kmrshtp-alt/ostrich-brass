@@ -1,4 +1,5 @@
 const Stripe = require('stripe');
+const manualTickets = require('./lib/manual-tickets');
 
 const ADMIN_PASSWORD = 'Ostrich2017-';
 
@@ -44,6 +45,7 @@ exports.handler = async (event) => {
           referrer: s.metadata?.referrer || '',
           adult_count: parseInt(s.metadata?.adult_count || 0),
           child_count: parseInt(s.metadata?.child_count || 0),
+          note: '',
         });
       }
 
@@ -51,6 +53,10 @@ exports.handler = async (event) => {
       if (hasMore) {
         startingAfter = sessions.data[sessions.data.length - 1].id;
       }
+    }
+
+    for (const m of manualTickets) {
+      tickets.push({ id: `manual-${m.last_name}${m.first_name}`, ...m });
     }
 
     tickets.sort((a, b) => b.created - a.created);

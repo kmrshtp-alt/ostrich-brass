@@ -1,6 +1,7 @@
 const Stripe = require('stripe');
+const manualTickets = require('./lib/manual-tickets');
 
-const TICKET_LIMIT = 80; // 前売り券の総販売上限
+const TICKET_LIMIT = 95; // 前売り券の総販売上限
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
@@ -47,6 +48,10 @@ exports.handler = async (event) => {
       if (hasMore) {
         startingAfter = sessions.data[sessions.data.length - 1].id;
       }
+    }
+
+    for (const m of manualTickets) {
+      soldCount += m.adult_count + m.child_count;
     }
 
     const remaining = TICKET_LIMIT - soldCount;

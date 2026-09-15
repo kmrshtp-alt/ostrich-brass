@@ -128,6 +128,7 @@
           <th class="num">大人</th>
           <th class="num">子ども</th>
           <th class="num">合計</th>
+          <th>備考</th>
         </tr>
       </thead>
       <tbody id="tickets-tbody"></tbody>
@@ -181,7 +182,7 @@
   function renderData(data) {
     const { tickets, totalAdults, totalChildren } = data;
     const totalAll = totalAdults + totalChildren;
-    const remaining = 80 - totalAll;
+    const remaining = 95 - totalAll;
 
     document.getElementById('total-adults').innerHTML = `${totalAdults}<span>名</span>`;
     document.getElementById('total-children').innerHTML = `${totalChildren}<span>名</span>`;
@@ -210,6 +211,7 @@
         <td class="num">${t.adult_count}</td>
         <td class="num">${t.child_count}</td>
         <td class="num">${t.adult_count + t.child_count}</td>
+        <td>${t.note || '—'}</td>
       `;
       tbody.appendChild(row);
     });
@@ -222,14 +224,14 @@
     if (!currentData) return;
     const { tickets } = currentData;
 
-    const header = ['No.', '購入日時', '姓', '名', 'セイ', 'メイ', '電話番号', '紹介メンバー', '大人', '子ども', '合計'];
+    const header = ['No.', '購入日時', '姓', '名', 'セイ', 'メイ', '電話番号', '紹介メンバー', '大人', '子ども', '合計', '備考'];
     const rows = tickets.map((t, i) => {
       const date = new Date(t.created * 1000).toLocaleString('ja-JP');
       return [
         tickets.length - i, date,
         t.last_name, t.first_name, t.last_name_kana, t.first_name_kana,
         t.phone, t.referrer || '',
-        t.adult_count, t.child_count, t.adult_count + t.child_count
+        t.adult_count, t.child_count, t.adult_count + t.child_count, t.note || ''
       ];
     });
 
