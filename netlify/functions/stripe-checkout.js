@@ -1,7 +1,5 @@
 const Stripe = require('stripe');
-const manualTickets = require('./lib/manual-tickets');
-
-const TICKET_LIMIT = 95; // 前売り券の総販売上限
+const { TICKET_LIMIT, getSoldCount } = require('./lib/ticket-inventory');
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
@@ -27,33 +25,8 @@ exports.handler = async (event) => {
   const quantity = parseInt(adult_count);
 
   try {
-    // 販売済み枚数を集計（支払い完了済みのセッションのみ）
-    let soldCount = 0;
-    let hasMore = true;
-    let startingAfter = undefined;
-
-    while (hasMore) {
-      const sessions = await stripe.checkout.sessions.list({
-        limit: 100,
-        ...(startingAfter ? { starting_after: startingAfter } : {}),
-      });
-
-      for (const s of sessions.data) {
-        if (s.payment_status !== 'paid') continue;
-        soldCount += parseInt(s.metadata?.adult_count || 0);
-        soldCount += parseInt(s.metadata?.child_count || 0);
-      }
-
-      hasMore = sessions.has_more;
-      if (hasMore) {
-        startingAfter = sessions.data[sessions.data.length - 1].id;
-      }
-    }
-
-    for (const m of manualTickets) {
-      soldCount += m.adult_count + m.child_count;
-    }
-
+    // 販売済み枚数を集計（支払い完了済みのセッション＋手売り分）
+    const soldCount = await getSoldCount(stripe);
     const remaining = TICKET_LIMIT - soldCount;
 
     if (remaining <= 0) {

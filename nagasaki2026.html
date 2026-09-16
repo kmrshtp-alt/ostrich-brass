@@ -308,6 +308,40 @@
       line-height: 1.6;
     }
 
+    /* 残り枚数バッジ */
+    .ticket-availability {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #fff8e8;
+      border: 1px solid #eeddb0;
+      border-radius: 999px;
+      padding: 7px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #8a6d1a;
+      margin-bottom: 16px;
+    }
+    .ticket-availability-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #d4a63a;
+      flex-shrink: 0;
+    }
+    .ticket-availability.is-low {
+      background: #fdeeee;
+      border-color: #f3c6c6;
+      color: #a33333;
+    }
+    .ticket-availability.is-low .ticket-availability-dot { background: #d64545; }
+    .ticket-availability.is-soldout {
+      background: #f0f0f0;
+      border-color: #ddd;
+      color: #666;
+    }
+    .ticket-availability.is-soldout .ticket-availability-dot { background: #999; }
+
     /* フォームフィールドのラベル上部 */
     .form-group-label-top {
       display: flex;
@@ -823,6 +857,10 @@
       <div class="nagasaki-form-header" id="form-header">
         <p class="section-label">前売り券のご購入</p>
         <h2 class="nagasaki-form-title">チケットを購入する</h2>
+        <div class="ticket-availability" id="ticket-availability" style="display:none;">
+          <span class="ticket-availability-dot"></span>
+          <span id="ticket-availability-text"></span>
+        </div>
         <p class="nagasaki-form-desc">
           クレジットカード・Apple Pay・Google Pay などで事前決済します。<br>
           購入後、Stripeから確認メールが届きます。
@@ -1034,6 +1072,28 @@
       document.getElementById('form-canceled').style.display = 'block';
       history.replaceState({}, '', window.location.pathname);
     }
+
+    // 残り枚数の表示
+    (async () => {
+      const badge = document.getElementById('ticket-availability');
+      const badgeText = document.getElementById('ticket-availability-text');
+      try {
+        const res = await fetch('/.netlify/functions/ticket-availability');
+        const data = await res.json();
+        if (!res.ok) return;
+
+        badge.style.display = 'inline-flex';
+        if (data.remaining <= 0) {
+          badge.classList.add('is-soldout');
+          badgeText.textContent = '前売り券は完売しました';
+        } else {
+          if (data.remaining <= 15) badge.classList.add('is-low');
+          badgeText.textContent = `残り${data.remaining}枚`;
+        }
+      } catch {
+        // 取得に失敗しても購入フォーム自体は表示し続ける
+      }
+    })();
 
     // フォーム送信 → Stripe Checkout へリダイレクト
     const nagasakiForm = document.getElementById('nagasaki-form');
