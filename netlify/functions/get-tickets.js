@@ -45,7 +45,9 @@ exports.handler = async (event) => {
           referrer: s.metadata?.referrer || '',
           adult_count: parseInt(s.metadata?.adult_count || 0),
           child_count: parseInt(s.metadata?.child_count || 0),
-          note: '',
+          amount: s.amount_total || 0,
+          note: 'オンライン決済済み',
+          paid: true,
         });
       }
 
@@ -56,18 +58,19 @@ exports.handler = async (event) => {
     }
 
     for (const m of manualTickets) {
-      tickets.push({ id: `manual-${m.last_name}${m.first_name}`, ...m });
+      tickets.push({ id: `manual-${m.last_name}${m.first_name}`, paid: false, ...m });
     }
 
     tickets.sort((a, b) => b.created - a.created);
 
     const totalAdults = tickets.reduce((sum, t) => sum + t.adult_count, 0);
     const totalChildren = tickets.reduce((sum, t) => sum + t.child_count, 0);
+    const totalAmount = tickets.reduce((sum, t) => sum + (t.amount || 0), 0);
 
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tickets, totalAdults, totalChildren }),
+      body: JSON.stringify({ tickets, totalAdults, totalChildren, totalAmount }),
     };
   } catch (err) {
     return {
