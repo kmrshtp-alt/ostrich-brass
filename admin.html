@@ -92,6 +92,12 @@
       border: 1.5px solid #999; border-radius: 3px; flex-shrink: 0;
     }
 
+    .seat-col { display: none; }
+    .seat-write-line {
+      display: inline-block; width: 100%; min-width: 60px;
+      border-bottom: 1px solid #999; height: 16px;
+    }
+
     tfoot td {
       padding: 12px 14px; font-weight: 700; background: #f0f0f0;
       border-top: 2px solid #1a1a1a; white-space: nowrap;
@@ -118,8 +124,12 @@
       tr { page-break-inside: avoid; }
       .col-note { display: none; }
       .check-col { display: table-cell !important; }
+      .seat-col { display: table-cell !important; width: 90px; }
       .paid-badge, .unpaid-badge { border: 1px solid #999; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       tfoot td { background: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .print-header .print-note {
+        font-size: 11px; color: #b8862a; font-weight: 700; margin-top: 4px;
+      }
     }
     .check-col { display: none; }
   </style>
@@ -178,6 +188,7 @@
   <div class="print-header">
     <h1>Ostrich Brass Concert in Nagasaki 2026 — 受付チェックリスト</h1>
     <div class="print-meta" id="print-meta"></div>
+    <div class="print-note">⚠️ 子どもの人数がいる方には、受付で「座席を使うお子様の人数」をお尋ねし、「座席使用」欄にご記入ください（膝上等で座席不要な場合は0とご記入ください）</div>
   </div>
 
   <div class="table-wrap">
@@ -193,6 +204,7 @@
           <th>メイ</th>
           <th class="num">大人</th>
           <th class="num">子ども</th>
+          <th class="seat-col">座席使用</th>
           <th class="num">合計</th>
           <th>領収</th>
           <th class="num">金額</th>
@@ -213,6 +225,7 @@
           <td style="text-align:right;">合計</td>
           <td class="num" id="foot-adults">—</td>
           <td class="num" id="foot-children">—</td>
+          <td class="seat-col"></td>
           <td class="num" id="foot-total-people">—</td>
           <td></td>
           <td class="num" id="foot-amount">—</td>
@@ -340,6 +353,7 @@
         <td>${t.first_name_kana}</td>
         <td class="num">${t.adult_count}</td>
         <td class="num">${t.child_count}</td>
+        <td class="seat-col">${t.child_count > 0 ? '<span class="seat-write-line"></span>' : ''}</td>
         <td class="num">${headCount}</td>
         <td>${t.paid ? '<span class="paid-badge">領収済み</span>' : '<span class="unpaid-badge">未収</span>'}</td>
         <td class="num">¥${(t.amount || 0).toLocaleString()}</td>

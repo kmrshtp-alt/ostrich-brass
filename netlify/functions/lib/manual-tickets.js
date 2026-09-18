@@ -3,6 +3,7 @@
 const CREATED = 1789441200; // 2026-09-15 登録分
 const CREATED_2 = 1789527600; // 2026-09-16 登録分
 const CREATED_3 = 1789566865; // 追加登録分
+const CREATED_4 = 1789748576; // 2026-09-19 登録分
 
 module.exports = [
   { last_name: '百木', first_name: '蓮', last_name_kana: '', first_name_kana: '', phone: '', referrer: '伊藤 有明', adult_count: 1, child_count: 0, amount: 1000, note: '手売り（団体割・@1,000円・当日精算予定・長崎南関係者/現役）', created: CREATED },
@@ -20,4 +21,5 @@ module.exports = [
   { last_name: '田中', first_name: '', last_name_kana: '', first_name_kana: '', phone: '', referrer: '伊藤 有明', adult_count: 2, child_count: 0, amount: 3000, note: '手売り（@1,500円×2名＝¥3,000・伊藤有明が3組分合計¥9,000を立替払い・お客様負担なし）', created: CREATED_2 },
   { last_name: '伊藤', first_name: '', last_name_kana: '', first_name_kana: '', phone: '', referrer: '伊藤 有明', adult_count: 2, child_count: 0, amount: 3000, note: '手売り（@1,500円×2名＝¥3,000・伊藤有明が3組分合計¥9,000を立替払い・お客様負担なし）', created: CREATED_2 },
   { last_name: '村尾', first_name: '直俊', last_name_kana: '', first_name_kana: '', phone: '', referrer: '伊藤 有明', adult_count: 1, child_count: 0, amount: 1000, note: '手売り（団体割・@1,000円・当日精算予定・長崎南関係者）', created: CREATED_3 },
+  { last_name: '森川', first_name: '', last_name_kana: '', first_name_kana: '', phone: '', referrer: '伊藤 有明', adult_count: 1, child_count: 0, amount: 1500, note: '手売り（伊藤有明が立替払い・お客様負担なし・伊藤関係者）', created: CREATED_4 },
 ];
