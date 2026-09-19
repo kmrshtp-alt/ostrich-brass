@@ -1,5 +1,5 @@
 const Stripe = require('stripe');
-const { TICKET_LIMIT, getSoldCount } = require('./lib/ticket-inventory');
+const { TICKET_LIMIT, getSoldCount, isSalesClosed } = require('./lib/ticket-inventory');
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'GET') {
@@ -15,7 +15,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
-      body: JSON.stringify({ remaining, limit: TICKET_LIMIT }),
+      body: JSON.stringify({ remaining, limit: TICKET_LIMIT, closed: isSalesClosed() }),
     };
   } catch (err) {
     return {

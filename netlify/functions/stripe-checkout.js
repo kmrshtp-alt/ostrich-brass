@@ -1,9 +1,16 @@
 const Stripe = require('stripe');
-const { TICKET_LIMIT, getSoldCount } = require('./lib/ticket-inventory');
+const { TICKET_LIMIT, SALES_CLOSE_AT, isSalesClosed, getSoldCount } = require('./lib/ticket-inventory');
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
+  }
+
+  if (isSalesClosed()) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: '前売り券のオンライン受付は終了しました。当日券（2,000円）を会場受付にてお求めください。' }),
+    };
   }
 
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -71,7 +78,15 @@ exports.handler = async (event) => {
       });
     }
 
+    // 受付終了時刻を過ぎて決済が完了しないよう、決済画面の有効期限を終了時刻に合わせる（Stripeの下限は30分）
+    const nowSec = Math.floor(Date.now() / 1000);
+    const expiresAt = Math.min(
+      Math.max(Math.floor(SALES_CLOSE_AT / 1000), nowSec + 31 * 60),
+      nowSec + 23 * 3600
+    );
+
     const session = await stripe.checkout.sessions.create({
+      expires_at: expiresAt,
       line_items,
       mode: 'payment',
       customer_email: undefined,

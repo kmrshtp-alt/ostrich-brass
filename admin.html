@@ -63,6 +63,7 @@
     tbody td { padding: 11px 14px; border-bottom: 1px solid #eee; white-space: nowrap; }
     tbody tr:last-child td { border-bottom: none; }
     .num { text-align: right; }
+    tbody tr.gyou-divider td { border-top: 3px solid #1a1a1a; }
 
     .paid-badge {
       display: inline-block; padding: 3px 10px; border-radius: 999px;
@@ -97,6 +98,7 @@
       display: inline-block; width: 100%; min-width: 60px;
       border-bottom: 1px solid #999; height: 16px;
     }
+    .blank-row-print { display: none; }
 
     tfoot td {
       padding: 12px 14px; font-weight: 700; background: #f0f0f0;
@@ -125,6 +127,7 @@
       .col-note { display: none; }
       .check-col { display: table-cell !important; }
       .seat-col { display: table-cell !important; width: 90px; }
+      .blank-row-print { display: table-row !important; }
       .paid-badge, .unpaid-badge { border: 1px solid #999; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       tfoot td { background: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       .print-header .print-note {
@@ -244,6 +247,27 @@
   let currentData = null;
   let savedPassword = '';
 
+  // 五十音の行区切り線用（あ/か/さ/た/な/は/ま/や/ら/わ行）
+  const KANA_ROWS = [
+    'アイウエオァィゥェォヴ',
+    'カキクケコガギグゲゴ',
+    'サシスセソザジズゼゾ',
+    'タチツテトダヂヅデドッ',
+    'ナニヌネノ',
+    'ハヒフヘホバビブベボパピプペポ',
+    'マミムメモ',
+    'ヤユヨャュョ',
+    'ラリルレロ',
+    'ワヲン',
+  ];
+  function kanaGyouIndex(ch) {
+    if (!ch) return -1;
+    for (let i = 0; i < KANA_ROWS.length; i++) {
+      if (KANA_ROWS[i].includes(ch)) return i;
+    }
+    return -1;
+  }
+
   function login() {
     const pw = document.getElementById('password-input').value;
     savedPassword = pw;
@@ -324,17 +348,15 @@
       `大人 ${totalAdults}名・子ども ${totalChildren}名・合計 ${totalAll}名（${tickets.length}件）・金額合計 ¥${(totalAmount || 0).toLocaleString()} / 印刷日時: ${new Date().toLocaleString('ja-JP')}`;
 
     const sortKana = document.getElementById('sort-kana-toggle').checked;
+    const kanaKeyOf = t => (t.last_name_kana + t.first_name_kana) || t.last_name + t.first_name;
     const orderedTickets = sortKana
-      ? [...tickets].sort((a, b) => {
-          const ka = (a.last_name_kana + a.first_name_kana) || a.last_name + a.first_name;
-          const kb = (b.last_name_kana + b.first_name_kana) || b.last_name + b.first_name;
-          return ka.localeCompare(kb, 'ja');
-        })
+      ? [...tickets].sort((a, b) => kanaKeyOf(a).localeCompare(kanaKeyOf(b), 'ja'))
       : tickets;
 
     const tbody = document.getElementById('tickets-tbody');
     tbody.innerHTML = '';
 
+    let prevGyou = null;
     orderedTickets.forEach((t, i) => {
       const date = new Date(t.created * 1000).toLocaleString('ja-JP', {
         year: 'numeric', month: '2-digit', day: '2-digit',
@@ -344,6 +366,11 @@
       // 人数分の個別チェック欄（グループの一部だけ先に来場した場合も対応できるように）
       const checkBoxes = Array.from({ length: headCount }).map(() => '<span class="check-box"></span>').join('');
       const row = document.createElement('tr');
+      if (sortKana) {
+        const gyou = kanaGyouIndex(kanaKeyOf(t)[0]);
+        if (i > 0 && gyou !== prevGyou) row.classList.add('gyou-divider');
+        prevGyou = gyou;
+      }
       row.innerHTML = `
         <td>${i + 1}</td>
         <td class="check-col"><div class="check-group">${checkBoxes}</div></td>
@@ -364,6 +391,32 @@
       `;
       tbody.appendChild(row);
     });
+
+    // 印刷時のみ表示する手書き追加用の空白行
+    const BLANK_ROW_COUNT = 6;
+    for (let b = 0; b < BLANK_ROW_COUNT; b++) {
+      const blankRow = document.createElement('tr');
+      blankRow.className = 'blank-row-print';
+      blankRow.innerHTML = `
+        <td>${orderedTickets.length + b + 1}</td>
+        <td class="check-col"></td>
+        <td><span class="seat-write-line"></span></td>
+        <td><span class="seat-write-line"></span></td>
+        <td><span class="seat-write-line"></span></td>
+        <td><span class="seat-write-line"></span></td>
+        <td class="num"><span class="seat-write-line"></span></td>
+        <td class="num"><span class="seat-write-line"></span></td>
+        <td class="seat-col"><span class="seat-write-line"></span></td>
+        <td class="num"><span class="seat-write-line"></span></td>
+        <td><span class="seat-write-line"></span></td>
+        <td class="num"><span class="seat-write-line"></span></td>
+        <td><span class="seat-write-line"></span></td>
+        <td><span class="seat-write-line"></span></td>
+        <td class="col-note"></td>
+        <td></td>
+      `;
+      tbody.appendChild(blankRow);
+    }
 
     document.getElementById('loading').style.display = 'none';
     document.getElementById('tickets-table').style.display = 'table';

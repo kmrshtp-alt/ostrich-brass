@@ -1,6 +1,11 @@
 const manualTickets = require('./manual-tickets');
 
 const TICKET_LIMIT = 95; // 前売り券の総販売上限
+const SALES_CLOSE_AT = Date.parse('2026-09-20T00:00:00+09:00'); // 9/19 23:59 を過ぎたらオンライン販売終了
+
+function isSalesClosed(now = Date.now()) {
+  return now >= SALES_CLOSE_AT;
+}
 
 async function getSoldCount(stripe) {
   let soldCount = 0;
@@ -32,4 +37,4 @@ async function getSoldCount(stripe) {
   return soldCount;
 }
 
-module.exports = { TICKET_LIMIT, getSoldCount };
+module.exports = { TICKET_LIMIT, SALES_CLOSE_AT, isSalesClosed, getSoldCount };

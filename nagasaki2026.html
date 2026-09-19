@@ -1152,7 +1152,7 @@
     }
 
     // 残り枚数の表示（フォーム上部・ヒーロー内の両方を更新）
-    function updateTicketBanner(suffix, remaining, limit) {
+    function updateTicketBanner(suffix, remaining, limit, closed) {
       const banner = document.getElementById('ticket-progress-banner' + suffix);
       const headline = document.getElementById('ticket-progress-headline' + suffix);
       const barFill = document.getElementById('ticket-progress-bar-fill' + suffix);
@@ -1165,7 +1165,11 @@
       banner.style.display = 'block';
       barFill.style.width = percent + '%';
 
-      if (remaining <= 0) {
+      if (closed) {
+        banner.classList.add('is-soldout');
+        headline.innerHTML = `🎺 <strong>${sold}名</strong>にご予約いただきました！`;
+        sub.textContent = '前売り券のオンライン受付は終了しました。当日券（2,000円）を会場受付にてお求めください。';
+      } else if (remaining <= 0) {
         banner.classList.add('is-soldout');
         headline.innerHTML = `🎺 <strong>${sold}名</strong>にご予約いただきました！`;
         sub.textContent = '前売り券は完売しました。当日券をご利用ください。';
@@ -1185,8 +1189,14 @@
         const res = await fetch('/.netlify/functions/ticket-availability');
         const data = await res.json();
         if (!res.ok) return;
-        updateTicketBanner('', data.remaining, data.limit);
-        updateTicketBanner('-hero', data.remaining, data.limit);
+        updateTicketBanner('', data.remaining, data.limit, data.closed);
+        updateTicketBanner('-hero', data.remaining, data.limit, data.closed);
+        if (data.closed) {
+          document.getElementById('nagasaki-form').style.display = 'none';
+          document.querySelector('.nagasaki-form-desc').style.display = 'none';
+          const heroCta = document.querySelector('.nagasaki-hero-cta');
+          if (heroCta) heroCta.style.display = 'none';
+        }
       } catch {
         // 取得に失敗しても購入フォーム自体は表示し続ける
       }
