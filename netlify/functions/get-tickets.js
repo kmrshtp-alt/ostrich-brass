@@ -46,7 +46,7 @@ exports.handler = async (event) => {
           adult_count: parseInt(s.metadata?.adult_count || 0),
           child_count: parseInt(s.metadata?.child_count || 0),
           amount: s.amount_total || 0,
-          note: 'オンライン決済済み',
+          note: '',
           paid: true,
         });
       }
