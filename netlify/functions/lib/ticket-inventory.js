@@ -1,3 +1,4 @@
+const fs = require('fs');
 const manualTickets = require('./manual-tickets');
 
 const TICKET_LIMIT = 95; // 前売り券の総販売上限
@@ -11,6 +12,16 @@ async function getSoldCount(stripe) {
   let soldCount = 0;
   let hasMore = true;
   let startingAfter = undefined;
+
+  // ローカル開発専用: 本番の購入データのスナップショットを使う（環境変数が無い本番では無効）
+  if (process.env.LOCAL_STRIPE_SNAPSHOT) {
+    const snap = JSON.parse(fs.readFileSync(process.env.LOCAL_STRIPE_SNAPSHOT, 'utf8'));
+    for (const t of snap.tickets) {
+      if (t.id.startsWith('manual-')) continue;
+      soldCount += t.adult_count + t.child_count;
+    }
+    hasMore = false;
+  }
 
   while (hasMore) {
     const sessions = await stripe.checkout.sessions.list({

@@ -1,3 +1,4 @@
+const fs = require('fs');
 const Stripe = require('stripe');
 const manualTickets = require('./lib/manual-tickets');
 
@@ -25,6 +26,13 @@ exports.handler = async (event) => {
     let tickets = [];
     let hasMore = true;
     let startingAfter = undefined;
+
+    // ローカル開発専用: 本番の購入データのスナップショットを使う（環境変数が無い本番では無効）
+    if (process.env.LOCAL_STRIPE_SNAPSHOT) {
+      const snap = JSON.parse(fs.readFileSync(process.env.LOCAL_STRIPE_SNAPSHOT, 'utf8'));
+      tickets = snap.tickets.filter(t => !t.id.startsWith('manual-'));
+      hasMore = false;
+    }
 
     while (hasMore) {
       const sessions = await stripe.checkout.sessions.list({
