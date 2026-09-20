@@ -231,35 +231,19 @@
       .np-spotlight-flyer { flex: none; width: 200px; align-self: center; }
       .np-spotlight-title { font-size: clamp(32px, 8vw, 48px); }
     }
-    @keyframes dot-blink {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0; }
+    /* 特別枠（定期演奏会リストの上に置くカード版） */
+    .np-spotlight--card {
+      border-radius: 20px;
+      padding: 56px 0;
+      margin: 8px 0 72px;
+      overflow: hidden;
     }
-    .nav-cta-nagasaki {
-      background: transparent !important;
-      color: #fff !important;
-      border: 1.5px solid rgba(255,255,255,0.5) !important;
-      font-size: 13px !important;
-      font-weight: 500 !important;
-      padding: 5px 14px 5px 10px !important;
-      display: inline-flex !important;
-      align-items: center !important;
-      gap: 7px !important;
-    }
-    .nav-cta-mobile.nav-cta-nagasaki { display: none !important; }
-    .nav-cta-nagasaki::before {
-      content: '';
-      display: inline-block;
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #4fc3f7;
-      flex-shrink: 0;
-      animation: dot-blink 1.4s ease-in-out infinite;
-    }
-    .nav-cta-nagasaki:hover {
-      background: rgba(255,255,255,0.08) !important;
-      border-color: #fff !important;
+    .np-spotlight--card .np-spotlight-inner { padding: 0 48px; gap: 56px; }
+    .np-spotlight--card .np-spotlight-flyer { flex: 0 0 340px; }
+    @media (max-width: 768px) {
+      .np-spotlight--card { padding: 40px 0; margin-bottom: 48px; }
+      .np-spotlight--card .np-spotlight-inner { padding: 0 24px; gap: 32px; }
+      .np-spotlight--card .np-spotlight-flyer { flex: none; width: 220px; }
     }
     /* NEWバッジ */
     .news-tag {
@@ -283,8 +267,8 @@
   <div class="announcement" id="announcement">
     <div class="announcement-inner">
       <span class="announcement-badge">長崎公演</span>
-      <p>🎺 9月20日（日）長崎県美術館ホール｜前売り1,500円
-        <a href="nagasaki2026.html">前売りチケットはこちら →</a>
+      <p>🎺 長崎公演、100枚完売の大盛況で終演しました！ご来場ありがとうございました
+        <a href="history.html#tl-nagasaki">公演の様子はこちら →</a>
       </p>
       <button class="announcement-close" id="announcement-close" aria-label="閉じる">✕</button>
     </div>
@@ -304,10 +288,8 @@
         <li><a href="#videos">演奏動画</a></li>
         <li><a href="members.html">メンバー</a></li>
         <li><a href="history.html">History</a></li>
-        <li><a href="nagasaki2026.html" class="nav-cta nav-cta-nagasaki">長崎公演</a></li>
         <li><a href="#request" class="nav-cta">演奏依頼</a></li>
       </ul>
-      <a href="nagasaki2026.html" class="nav-cta nav-cta-nagasaki nav-cta-mobile">長崎公演</a>
       <a href="#request" class="nav-cta nav-cta-mobile">演奏依頼</a>
       <button class="nav-hamburger" id="hamburger" aria-label="メニュー">
         <span></span><span></span><span></span>
@@ -352,45 +334,6 @@
     </div>
   </section>
 
-  <!-- ===== 長崎公演スポットライト ===== -->
-  <section class="np-spotlight" id="nagasaki-upcoming">
-    <div class="np-spotlight-inner" role="link" tabindex="0" onclick="location.href='nagasaki2026.html'" onkeydown="if(event.key==='Enter')location.href='nagasaki2026.html'">
-
-      <!-- 左：情報 -->
-      <div class="np-spotlight-body">
-        <div class="np-spotlight-eyebrow">
-          <span class="np-spotlight-label">Upcoming Concert</span>
-          <span class="np-spotlight-badge">前売り受付中</span>
-        </div>
-        <p class="np-spotlight-date">2026 <span>SEP</span> 20 <span>SUN</span></p>
-        <h2 class="np-spotlight-title">Concert in<br><em>Nagasaki</em></h2>
-        <div class="np-spotlight-info">
-          <div class="np-spotlight-info-row">
-            <span class="np-spotlight-info-icon">🕒</span>
-            <span>15:00開演（14:30開場）</span>
-          </div>
-          <div class="np-spotlight-info-row">
-            <span class="np-spotlight-info-icon">📍</span>
-            <span>長崎県美術館ホール
-              <a href="https://maps.google.com/?q=長崎県美術館+長崎市出島町2-1" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="np-map-link">地図</a>
-            </span>
-          </div>
-          <div class="np-spotlight-info-row">
-            <span class="np-spotlight-info-icon">🎟️</span>
-            <span>前売り 1,500円　／　当日 2,000円　／　小学生以下無料</span>
-          </div>
-        </div>
-        <a href="nagasaki2026.html" class="np-spotlight-cta" onclick="event.stopPropagation()">前売りチケットを購入する →</a>
-      </div>
-
-      <!-- 右：フライヤー -->
-      <div class="np-spotlight-flyer">
-        <img src="images/news/nagasaki2026-flyer.webp" alt="Concert in Nagasaki 2026 フライヤー">
-      </div>
-
-    </div>
-  </section>
-
   <!-- ===== News ===== -->
   <section class="section section-alt" id="news">
     <div class="container">
@@ -398,19 +341,32 @@
       <h2 class="section-title">お知らせ</h2>
       <div class="news-grid">
 
-        <!-- 長崎公演 予約受付中カード -->
+        <!-- 長崎公演 終演カード -->
         <article class="news-card news-card--featured">
           <div class="news-card-img">
-            <img src="images/news/nagasaki2026-flyer.webp" alt="Ostrich Brass Concert in Nagasaki 2026">
+            <img src="images/news/nagasaki2026-curtaincall.webp" alt="長崎公演のカーテンコール">
           </div>
           <div class="news-card-body">
             <div class="news-card-meta">
               <span class="news-tag news-tag--new">NEW</span>
-              <span class="news-date">2026.06.22</span>
+              <span class="news-date">2026.09.20</span>
             </div>
-            <h3 class="news-title">初の県外公演、長崎へ。前売りチケット受付中！</h3>
-            <p class="news-excerpt">2026年9月20日（日）長崎県美術館ホールにて開催。前売り1,500円・当日2,000円・小学生以下無料。枚数限定、お早めに！</p>
-            <a href="nagasaki2026.html" class="btn-primary" style="display:inline-block;margin-top:16px;">前売りチケットを購入する →</a>
+            <h3 class="news-title">🎺 Concert in Nagasaki、大盛況のうちに終演しました！</h3>
+            <p class="news-excerpt">2026年9月20日（日）、長崎県美術館ホールにて初の県外公演「Concert in Nagasaki」を開催しました。いつも長崎から通ってくれているTuba・伊藤有明のために、メンバー全員が一致団結して挑み、チケットは100枚が完売。大盛況のなかで終えることができました。ご来場・応援してくださった皆さま、本当にありがとうございました🙏</p>
+            <a href="history.html#tl-nagasaki" class="btn-primary" style="display:inline-block;margin-top:16px;">Historyで見る →</a>
+          </div>
+        </article>
+
+        <article class="news-card">
+          <div class="news-card-img">
+            <img src="images/news/nagasaki2026-flyer.webp" alt="Ostrich Brass Concert in Nagasaki 2026">
+          </div>
+          <div class="news-card-body">
+            <time class="news-date">2026.06.22</time>
+            <h3 class="news-title">🎺 初の県外公演「Concert in Nagasaki」の開催が決定しました！</h3>
+            <p class="news-text">オーストリッチブラス初の県外公演を、2026年9月20日（日）長崎県美術館ホールで開催します。上質な演奏×クスっと笑えるエンターテインメントを、長崎の皆さまにお届けします。<br><br>
+              <a href="history.html#tl-nagasaki">公演の様子はこちら</a>
+            </p>
           </div>
         </article>
 
@@ -531,6 +487,40 @@
       <div class="section-label">Concerts</div>
       <h2 class="section-title">定期演奏会の記録</h2>
       <p class="section-desc">結成以来、定期演奏会をはじめ地域のイベントやミニコンサートなど、さまざまなステージで演奏を続けています。</p>
+
+      <!-- Special Concert（定期演奏会とは別枠） -->
+      <div class="np-spotlight np-spotlight--card" id="special-nagasaki">
+        <div class="np-spotlight-inner" role="link" tabindex="0" onclick="location.href='history.html#tl-nagasaki'" onkeydown="if(event.key==='Enter')location.href='history.html#tl-nagasaki'">
+          <div class="np-spotlight-body">
+            <div class="np-spotlight-eyebrow">
+              <span class="np-spotlight-label">Special Concert</span>
+              <span class="np-spotlight-badge">100枚完売・大盛況</span>
+            </div>
+            <p class="np-spotlight-date">2026 <span>SEP</span> 20 <span>SUN</span></p>
+            <h3 class="np-spotlight-title">Concert in<br><em>Nagasaki</em></h3>
+            <div class="np-spotlight-info">
+              <div class="np-spotlight-info-row">
+                <span class="np-spotlight-info-icon">🕒</span>
+                <span>15:00開演（14:30開場）</span>
+              </div>
+              <div class="np-spotlight-info-row">
+                <span class="np-spotlight-info-icon">📍</span>
+                <span>長崎県美術館ホール
+                  <a href="https://maps.google.com/?q=長崎県美術館+長崎市出島町2-1" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="np-map-link">地図</a>
+                </span>
+              </div>
+              <div class="np-spotlight-info-row">
+                <span class="np-spotlight-info-icon">🎺</span>
+                <span>初の県外公演　100枚完売・大盛況で終演しました！</span>
+              </div>
+            </div>
+            <a href="history.html#tl-nagasaki" class="np-spotlight-cta" onclick="event.stopPropagation()">Historyで見る →</a>
+          </div>
+          <div class="np-spotlight-flyer">
+            <img src="images/news/nagasaki2026-flyer.webp" alt="Concert in Nagasaki 2026 フライヤー">
+          </div>
+        </div>
+      </div>
 
       <div class="concert-list">
 
@@ -1167,7 +1157,6 @@
           <a href="history.html">History</a>
           <a href="#request">演奏依頼</a>
           <a href="tokushoho.html">特定商取引法に基づく表記</a>
-          <a href="admin.html">管理</a>
         </div>
         <div class="footer-social">
           <a href="https://youtube.com/@ostrichbrass" target="_blank" rel="noopener" aria-label="YouTube" class="social-link">

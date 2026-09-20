@@ -371,7 +371,7 @@
 
 /* ── New photo column: CSS multi-column masonry ──
    Photos retain their natural aspect ratio (no cropping). First photo spans
-   both columns as a hero. Variant classes (.g3/.g4/.g4grid/.g4wide/.g5/.g8)
+   both columns as a hero. Variant classes (.g3/.g4/.g4grid/.g4wide/.g5/.g6/.g8)
    are kept as targets so existing HTML works, but they now all use the same
    masonry; the column count just scales with photo count. */
 .tl-concert-photos {
@@ -407,6 +407,30 @@
   column-span: all;
   margin-bottom: 10px;
 }
+
+/* g6: 写真の縦横比が混在する回用。スクロールなしで全枚数が一望できるモザイク配置 */
+.tl-concert-photos.g6 {
+  column-count: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.tl-concert-photos.g6 .ph { margin: 0; min-height: 0; }
+.tl-concert-photos.g6 .ph img { width: 100%; height: 100%; object-fit: cover; }
+.tl-concert-photos.g6 .ph-mosaic {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 1fr 1fr;
+  gap: 10px;
+  aspect-ratio: 2.25;
+}
+.tl-concert-photos.g6 .ph-main { grid-column: 1 / 3; grid-row: 1 / 3; }
+.tl-concert-photos.g6 .ph-trio {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.tl-concert-photos.g6 .ph-trio .ph { aspect-ratio: 3 / 4; }
 
 .ph.placeholder {
   background:
@@ -446,6 +470,8 @@
     border-radius: 3px;
   }
   .tl-concert-photos::-webkit-scrollbar-track { background: transparent; }
+  /* 全写真が一望できる構成の回は、内部スクロールさせない */
+  .tl-concert-photos.g6 { max-height: none; overflow: visible; }
 }
 
 .tl-concert-body {
