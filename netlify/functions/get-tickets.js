@@ -1,7 +1,7 @@
 const Stripe = require('stripe');
 const manualTickets = require('./lib/manual-tickets');
 
-const ADMIN_PASSWORD = 'Ostrich2017-';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'Ostrich2017-'; // Netlifyの環境変数 ADMIN_PASSWORD を設定すると変更できる
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
